@@ -1,0 +1,8 @@
+FROM node:14
+WORKDIR /usr/src/app
+COPY ./inspire-eric/package*.json ./
+
+RUN npm install
+COPY ./inspire-eric/. .
+EXPOSE 3030
+CMD [ "node", "index.js" ]

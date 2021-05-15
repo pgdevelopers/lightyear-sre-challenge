@@ -1,0 +1,10 @@
+FROM golang:1.16.4-stretch as builder
+COPY ./inspire-brooke/. /app
+WORKDIR /app
+RUN CGO_ENABLED=0 GOOS=linux go build -o brooke
+
+FROM alpine:latest
+WORKDIR /app/
+COPY --from=builder /app .
+EXPOSE 8000
+CMD ["./brooke"]

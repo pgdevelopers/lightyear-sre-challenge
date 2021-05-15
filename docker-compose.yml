@@ -1,0 +1,85 @@
+version: "3"
+services:
+  chadiamond:
+    build:
+      context: .
+      dockerfile: Dockerfile.chadiamond
+      labels:
+        - "traefik.http.routers.chadiamond.rule=Path(`/api/chadiamond`)"
+        - "traefik.http.services.chadiamond.loadbalancer.server.port=5000"
+  brooke:
+    build:
+      context: .
+      dockerfile: Dockerfile.brooke
+      labels:
+        - "traefik.http.routers.brooke.rule=Path(`/api/brooke`)"
+        - "traefik.http.services.brooke.loadbalancer.server.port=8000"
+  eric:
+    build:
+      context: .
+      dockerfile: Dockerfile.eric
+      labels:
+        - "traefik.http.routers.eric.rule=Path(`/api/eric`)"
+        - "traefik.http.services.eric.loadbalancer.server.port=3030"
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+  redis:
+    image: docker.io/bitnami/redis:6.2
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis_data:/bitnami/redis/data"
+  # comment out web to run locally with rails s
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.web
+  #   environment:
+  #     - "RAILS_ENV=production"
+  #   ports:
+  #     - "3000:3000"
+  #   labels:
+  #     - "traefik.http.routers.web.rule=Path(`/`)"
+  #     - "traefik.http.services.web.loadbalancer.server.port=3000"
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - eric
+  #     - chadiamond
+  #     - brooke
+  proxy:
+    image: traefik:v2.4.2
+    command:
+      - "--api=true"
+      - "--api.dashboard=true"
+      - "--api.insecure=true" # Don't do that in production
+      - "--providers.docker"
+      - "--entrypoints.web.address=:80"
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+volumes:
+  redis_data:
+    driver: local
