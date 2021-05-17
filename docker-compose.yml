@@ -60,11 +60,11 @@ services:
       traefik.http.routers.web.priority: 2
       traefik.http.services.web.loadbalancer.server.port: 3000
     depends_on:
-      - db
-      - redis
-      - eric
-      - chadiamond
-      - brooke
+      - db.data
+      - redis.data
+      - eric.api
+      - chadiamond.api
+      - brooke.api
   proxy.web:
     image: traefik:v2.4.2
     command:
