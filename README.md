@@ -47,4 +47,5 @@ InsPIRA Tickets in priority order:
 - The Redis Helm chart seems to take down the web pods when deployed. What should we do to solve redis?
 - Traefik is deployed to the cluster via helm chart, but isn't used yet. Can you help us configure Traefik?
 - What CI/CD strategy would you recommend for this cluster? This could involve many git repos beyond this! Can you help us with that?
+- How might we build observability and monitoring into the cluster?
 - We'd also love to hear recommendations from you on how we could build confidence and reduce toil on our team with automation. What else would you suggest we do?
