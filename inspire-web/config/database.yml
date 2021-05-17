@@ -15,4 +15,4 @@ test:
 
 production:
   <<: *default
-  host: db
+  host: db.data

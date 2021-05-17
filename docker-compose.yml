@@ -1,27 +1,32 @@
 version: "3"
 services:
-  chadiamond:
+  chadiamond.api:
     build:
       context: .
       dockerfile: Dockerfile.chadiamond
       labels:
-        - "traefik.http.routers.chadiamond.rule=Path(`/api/chadiamond`)"
-        - "traefik.http.services.chadiamond.loadbalancer.server.port=5000"
-  brooke:
+        traefik.enable: "true"
+        traefik.http.routers.chadiamond.rule: PathPrefix(`/api/chadiamond`)
+        traefik.http.routers.chadiamond.priority: 100
+        traefik.http.services.chadiamond.loadbalancer.server.port: 5000
+  brooke.api:
     build:
       context: .
       dockerfile: Dockerfile.brooke
       labels:
-        - "traefik.http.routers.brooke.rule=Path(`/api/brooke`)"
-        - "traefik.http.services.brooke.loadbalancer.server.port=8000"
-  eric:
+        traefik.http.routers.brooke.rule: PathPrefix(`/api/brooke`)
+        traefik.http.routers.brooke.priority: 100
+        traefik.http.services.brooke.loadbalancer.server.port: 8000
+  eric.api:
     build:
       context: .
       dockerfile: Dockerfile.eric
       labels:
-        - "traefik.http.routers.eric.rule=Path(`/api/eric`)"
-        - "traefik.http.services.eric.loadbalancer.server.port=3030"
-  db:
+        traefik.enable: "true"
+        traefik.http.routers.eric.rule: PathPrefix(`/api/eric`)
+        traefik.http.routers.eric.priority: 100
+        traefik.http.services.eric.loadbalancer.server.port: 3030
+  db.data:
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
@@ -31,7 +36,7 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
-  redis:
+  redis.data:
     image: docker.io/bitnami/redis:6.2
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
@@ -41,24 +46,26 @@ services:
     volumes:
       - "redis_data:/bitnami/redis/data"
   # comment out web to run locally with rails s
-  # web:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.web
-  #   environment:
-  #     - "RAILS_ENV=production"
-  #   ports:
-  #     - "3000:3000"
-  #   labels:
-  #     - "traefik.http.routers.web.rule=Path(`/`)"
-  #     - "traefik.http.services.web.loadbalancer.server.port=3000"
-  #   depends_on:
-  #     - db
-  #     - redis
-  #     - eric
-  #     - chadiamond
-  #     - brooke
-  proxy:
+  web.web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    environment:
+      - "RAILS_ENV=production"
+      - "RAILS_SERVE_STATIC_FILES=true"
+    ports:
+      - "3000:3000"
+    labels:
+      traefik.http.routers.web.rule: PathPrefix(`/`)
+      traefik.http.routers.web.priority: 2
+      traefik.http.services.web.loadbalancer.server.port: 3000
+    depends_on:
+      - db
+      - redis
+      - eric
+      - chadiamond
+      - brooke
+  proxy.web:
     image: traefik:v2.4.2
     command:
       - "--api=true"
