@@ -7,7 +7,7 @@
 ## Introduction
 Hello and welcome! If you are reading this, then you have chosen to give our SRE Code Challenge a try. Splendid! You've got this.
 
-Software Engineering interviewing is something our industry has never real done well. We've tried to find the right blend of respecting your time and ensuring you will be  successful in our organization as an SRE.
+Software Engineering interviewing is something our industry has never done very well. We've tried to find the right blend of respecting your time and ensuring you will be  successful in our organization as an SRE.
 
 This challenge will give you a taste of the kind of real work an SRE on our team performs. A mix between coding, networking, infrastructure, and observability.
 
