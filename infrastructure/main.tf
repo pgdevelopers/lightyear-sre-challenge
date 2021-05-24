@@ -100,7 +100,7 @@ resource "kubernetes_deployment" "chadiamond" {
       spec {
         container {
           image = "joshuarose/inspire-chadiamond:v0.1"
-          name  = "eric"
+          name  = "chadiamond"
           liveness_probe {
             http_get {
               path = "/api/chadiamond"
@@ -144,7 +144,7 @@ resource "kubernetes_deployment" "brooke" {
       spec {
         container {
           image = "joshuarose/inspire-brooke:v0.1"
-          name  = "eric"
+          name  = "brooke"
           liveness_probe {
             http_get {
               path = "/api/brooke"
@@ -187,7 +187,7 @@ resource "kubernetes_deployment" "web" {
 
       spec {
         container {
-          image = "joshuarose/inspire-web:v0.2"
+          image = "joshuarose/inspire-web:v0.3" //v3
           image_pull_policy = "IfNotPresent"
           name  = "web"
           env_from {
@@ -200,14 +200,17 @@ resource "kubernetes_deployment" "web" {
               path = "/"
               port = 3000
             }
-
-            initial_delay_seconds = 3
-            period_seconds        = 3
+            //needs a bit more time between requests and timeouts
+            initial_delay_seconds = 5
+            period_seconds        = 5
+            timeout_seconds       = 5
           }
         }
       }
     }
   }
+  //redis first
+  depends_on  = [ helm_release.redis ]
 }
 
 
@@ -407,12 +410,12 @@ resource "kubernetes_stateful_set" "db" {
 }
 
 # TODO: Deploying this chart takes down our web pods. Why?
-# resource "helm_release" "redis" {
-#   name  = "redis"
-#   namespace = "data"
-#   chart = "https://charts.bitnami.com/bitnami/redis-10.7.16.tgz"
-# }
-
+resource "helm_release" "redis" {
+   name  = "redis"
+   namespace = "data"
+   chart = "https://charts.bitnami.com/bitnami/redis-10.7.16.tgz"
+ }  
+ 
 resource "helm_release" "traefik" {
   name  = "traefik"
   namespace = "web"
