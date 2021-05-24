@@ -51,10 +51,47 @@ They started the work to move this to Kubernetes using Terraform found in /infra
 The team has been excited to bring in an SRE, a hero designed to reduce the team's toil through automation and living at the intersection between code and infrastructure. They've prepared a list of things they could use your help on.
 
 InsPIRA Tickets in priority order:
-- We have a new version of inspire-web we'd like to deploy v0.3, can you do this for us?
+## We have a new version of inspire-web we'd like to deploy v0.3, can you do this for us?
+
+see tf code
+
 - How might we automatically deploy this image whenever there is an update?
+
+## CI/CD pipelines will help. See below on a strategy we could implement. 
+
 - The Redis Helm chart seems to take down the web pods when deployed. What should we do to solve redis?
-- Traefik is deployed to the cluster via helm chart, but isn't used yet. Can you help us configure Traefik?
-- What CI/CD strategy would you recommend for this cluster? This could involve many git repos beyond this! Can you help us with that?
-- How might we build observability and monitoring into the cluster?
-- We'd also love to hear recommendations from you on how we could build confidence and reduce toil on our team with automation. What else would you suggest we do?
+
+Seems to be an order of operations issue. I'll gladly demo for you. 
+
+## Traefik is deployed to the cluster via helm chart, but isn't used yet. Can you help us configure Traefik?
+Let's talk! Minikube has some interesting limitations that I'll be glad to review. 
+
+## What CI/CD strategy would you recommend for this cluster? This could involve many git repos beyond this! Can you help us with that?
+[circleci](https://circleci.com/) is a commercial product 
+
+Jenkins is open source, that's always worked well for me. Also Github actions will likely work. 
+
+With deploying new pods, we can deploy the image and do rolling updates of the pods to prevent downtime. 
+
+
+## How might we build observability and monitoring into the cluster?
+
+
+## We'd also love to hear recommendations from you on how we could build confidence and reduce toil on our team with automation. What else would you suggest we do? 
+
+Reducing toil comes with time. If we can identify the greatest time-sinks, we can automate it (if possible or as much as possible).  
+
+Follow industry best practices for collecting 'in the wild' metrics. There are too many devices to account for all scenarios, so collecting that data from the device is critical for efficiently addressing issues. 
+
+To build confidence, my approach would be to start with getting baseline metrics. Define measureables and use load-testing tools to gather stats. Try to determine things like: 
+- Baseline how much traffic can a single service handle? 
+- Is there a pod that's hogging resources or is there unnecessary throttling? 
+- Is there a bottleneck on db traffic? 
+- Is QOS implemented? If it is, is it working as expected?
+- Kubernetes seems to have some notoriously finicky CPU distribution. Is that a problem here? 
+- Is it DNS? It's always DNS. 
+
+Google provides a ton of [resources for SREs](https://sre.google/resources/), including Case Studies on deploying and maintaining large deployments. Studying these resources has been incredibly valuable. 
+
+
+

@@ -1,0 +1,29 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: inspire-proxy
+  namespace: web
+spec:
+  entryPoints:            
+    - foo
+  routes:                 
+  - kind: Rule
+    match: Host(`inspire.demo`) 
+    priority: 10    
+    services:       
+    - kind: Service
+      name: inspire
+      namespace: web
+      passHostHeader: true
+      port: 80
+      responseForwarding:
+        flushInterval: 1ms
+      scheme: http
+      serversTransport: transport
+      sticky:
+        cookie:
+          httpOnly: true
+          name: cookie
+          sameSite: none
+      strategy: RoundRobin
+      weight: 10
