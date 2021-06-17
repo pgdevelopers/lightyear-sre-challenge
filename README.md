@@ -34,7 +34,7 @@ The new architecture:
 
 ## Level-Set Expectations
 - Most people invest 3-4 hours into this
-- You don't have to solve everything, in fact we expect you not to!
+- You don't have to solve everything, in fact we expect you not to! Work in priority order and come prepared to chat in our debrief about any struggles you encounter. The real interview is communicating about how you're solving these problems!
 - If you don't know something or it doesn't make sense. Reach out, on the job you will be able to tap colleagues for help and expect the same here!
 - We expect your work to be done in a branch and submitted as a pull request to main. We'll do the code review of your PR together!
 
@@ -50,11 +50,14 @@ They started the work to move this to Kubernetes using Terraform found in /infra
 
 The team has been excited to bring in an SRE, a hero designed to reduce the team's toil through automation and living at the intersection between code and infrastructure. They've prepared a list of things they could use your help on.
 
-InsPIRA Tickets in priority order:
-- We have a new version of inspire-web we'd like to deploy v0.3, can you do this for us?
-- How might we automatically deploy this image whenever there is an update?
-- The Redis Helm chart seems to take down the web pods when deployed. What should we do to solve redis?
-- Traefik is deployed to the cluster via helm chart, but isn't used yet. Can you help us configure Traefik?
+Tackle these InsPIRA tickets in priority order. (Again, don't worry if you don't finish them all! Get through what you can and be prepared to chat about it.)
+- Deploy v0.3 of inspire-web
+- Update the configuration to automatically deploy this image whenever there is an update
+- Deploy the Redis Helm chart (it's commented out)
+    - Hm, the web pods don't seem to like Redis. Diagnose and resolve the issue so the web pods AND Redis can run in the cluster.
 - What CI/CD strategy would you recommend for this cluster? This could involve many git repos beyond this! Can you help us with that?
-- How might we build observability and monitoring into the cluster?
+
+Bonus points!
+- Traefik is deployed to the cluster via helm chart, but isn't used yet. Can you configure Traefik?
+- How might we build observability and monitoring into the cluster? Feel free to start implementing this or prepare talking points as time allows.
 - We'd also love to hear recommendations from you on how we could build confidence and reduce toil on our team with automation. What else would you suggest we do?
