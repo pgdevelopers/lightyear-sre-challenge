@@ -5,7 +5,7 @@ provider "kubernetes" {
 
 provider "helm" {
   kubernetes {
-    config_path = "~/.kube/config"
+    config_path    = "~/.kube/config"
     config_context = "minikube"
   }
 }
@@ -100,7 +100,7 @@ resource "kubernetes_deployment" "chadiamond" {
       spec {
         container {
           image = "joshuarose/inspire-chadiamond:v0.1"
-          name  = "eric"
+          name  = "chadiamond"
           liveness_probe {
             http_get {
               path = "/api/chadiamond"
@@ -144,7 +144,7 @@ resource "kubernetes_deployment" "brooke" {
       spec {
         container {
           image = "joshuarose/inspire-brooke:v0.1"
-          name  = "eric"
+          name  = "brooke"
           liveness_probe {
             http_get {
               path = "/api/brooke"
@@ -187,9 +187,9 @@ resource "kubernetes_deployment" "web" {
 
       spec {
         container {
-          image = "joshuarose/inspire-web:v0.2"
+          image             = "joshuarose/inspire-web:v0.2"
           image_pull_policy = "IfNotPresent"
-          name  = "web"
+          name              = "web"
           env_from {
             config_map_ref {
               name = "web-config"
@@ -414,8 +414,8 @@ resource "kubernetes_stateful_set" "db" {
 # }
 
 resource "helm_release" "traefik" {
-  name  = "traefik"
-  namespace = "web"
+  name       = "traefik"
+  namespace  = "web"
   repository = "https://helm.traefik.io/traefik"
-  chart            = "traefik"
+  chart      = "traefik"
 }

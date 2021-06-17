@@ -6,3 +6,4 @@ tmp
 terraform.tfstate
 terraform.tfstate.backup
 .DS_STORE
+.idea/*
